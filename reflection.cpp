@@ -1,57 +1,41 @@
 #include <GL/glut.h>
-#include <iostream>
-using namespace std;
 
-float triangle[3][2] = {
-    {100, 100},
-    {150, 200},
-    {200, 100}
-};
-
-void drawTriangle(float points[3][2]) {
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < 3; i++) {
-        glVertex2f(points[i][0], points[i][1]);
-    }
-    glEnd();
-}
-
-void reflectTriangle(float output[3][2]) {
-    for (int i = 0; i < 3; i++) {
-        output[i][0] = triangle[i][0];           // X remains same
-        output[i][1] = -triangle[i][1] + 300;    // Reflect across y = 150
-    }
-}
+bool reflectX = true;
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
 
-    glColor3f(1.0, 0.0, 0.0);       // Red original triangle
-    drawTriangle(triangle);
+    // Apply reflection
+    glScalef(reflectX ? 1 : -1, reflectX ? -1 : 1, 1);
 
-    float reflected[3][2];
-    reflectTriangle(reflected);
+    glBegin(GL_QUADS);
+        glColor3f(0.0f, 1.0f, 0.5f);
+        glVertex2f(-0.4f, -0.4f);
+        glVertex2f( 0.4f, -0.4f);
+        glVertex2f( 0.4f,  0.4f);
+        glVertex2f(-0.4f,  0.4f);
+    glEnd();
 
-    glColor3f(0.0, 1.0, 1.0);       // Cyan reflected triangle
-    drawTriangle(reflected);
-
-    glFlush();
+    glutSwapBuffers();
 }
 
-void init() {
-    glClearColor(1.0, 1.0, 1.0, 1.0); // White background
-    gluOrtho2D(0, 640, 0, 480);       // 2D orthographic projection
+void keyboard(unsigned char key, int, int) {
+    reflectX = (key == 'x' || key == 'X'); // 'x' reflects over X-axis, 'y' over Y-axis
+    glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(640, 480);
-    glutInitWindowPosition(100, 100);
-    glutCreateWindow("Reflection");
-    init();
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(600, 600);
+    glutCreateWindow("2D Reflection");
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+
     glutMainLoop();
     return 0;
 }
-
