@@ -40,13 +40,13 @@ void init() {
     gluOrtho2D(0, 640, 0, 480);
 }
 
-int main(int argc, char** argv) {
+int main() {
     cout << "Enter x1 y1: ";
     cin >> x_start >> y_start;
     cout << "Enter x_end y_end: ";
     cin >> x_end >> y_end;
 
-    glutInit(&argc, argv);
+    
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(640, 480);
     glutInitWindowPosition(100, 100);
