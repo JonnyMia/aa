@@ -1,46 +1,49 @@
-#include <GL/gl.h>
 #include <GL/glut.h>
-float triangle[3][2] = {
-{100,100},
-{150,200},
-{200,100}
-};
-float sx = 1.5, sy = 1.5;
-void drawTriangle(float points[3][2]){
-glBegin(GL_TRIANGLES);
-for(int i = 0;i < 3;i++){
-glVertex2f(points[i][0],points[i][1]);
+
+// Scaling variables
+float scale = 1.0f;
+bool growing = true;
+
+// Display callback function
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+    glScalef(scale, scale, 1.0f);
+
+    glBegin(GL_QUADS);
+        glColor3f(0.2f, 0.6f, 1.0f);
+        glVertex2f(-0.5f, -0.5f);
+        glVertex2f( 0.5f, -0.5f);
+        glVertex2f( 0.5f,  0.5f);
+        glVertex2f(-0.5f,  0.5f);
+    glEnd();
+
+    glutSwapBuffers();
 }
-glEnd();
+
+// Timer function for animation
+void timer(int) {
+    scale += (growing ? 0.01f : -0.01f);
+
+    if (scale >= 1.5f || scale <= 0.5f)
+        growing = !growing;
+
+    glutPostRedisplay();
+    glutTimerFunc(16, timer, 0);
 }
-void scaling(float output[3][2]){
-for(int i = 0;i < 3;i++){
-output[i][0] = triangle[i][0] * sx;
-output[i][1] = triangle[i][1] * sy;
-}
-}
-void display(){
-glClear(GL_COLOR_BUFFER_BIT);
-// Original Triangle:- (RED)
-glColor3f(1.0,0.0,0.0);
-drawTriangle(triangle);
-// Scaled Triangle:- (BLUE)
-glColor3f(0.0,0.0,1.0);
-float scale[3][2];
-scaling(scale);
-drawTriangle(scale);glFlush();
-}
-void myinit(){
-glClearColor(1.0,1.0,1.0,1.0);
-glMatrixMode(GL_PROJECTION);
-gluOrtho2D(0,640,0,480);
-}
-int main(int argc,char ** argv){
-glutInit(&argc,argv);
-glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
-glutInitWindowSize(640,480);
-glutCreateWindow("Translation");
-myinit();
-glutDisplayFunc(display);
-glutMainLoop();
+
+// Main function
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(600, 600);
+    glutCreateWindow("Scaling Animation");
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+    glutDisplayFunc(display);
+    glutTimerFunc(0, timer, 0);
+
+    glutMainLoop();
+    return 0;
 }
