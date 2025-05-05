@@ -7,7 +7,7 @@ int xc, yc, r;
 
 // Function to plot all 8 symmetric points of the circle
 void plotCirclePoints(int x, int y) {
-    glBegin(GL_POINTS);
+        glBegin(GL_POINTS);
         glVertex2i(xc + x, yc + y);
         glVertex2i(xc - x, yc + y);
         glVertex2i(xc + x, yc - y);
@@ -16,7 +16,7 @@ void plotCirclePoints(int x, int y) {
         glVertex2i(xc - y, yc + x);
         glVertex2i(xc + y, yc - x);
         glVertex2i(xc - y, yc - x);
-    glEnd();
+        glEnd();
 }
 
 // Bresenham's circle drawing function
